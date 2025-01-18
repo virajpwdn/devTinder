@@ -1,51 +1,39 @@
 const express = require("express");
 const app = express();
+const { authenticate } = require("./src/middlewares/auth");
 
+// app.use("/", authenticate);
 
-app.get("/ab?c", (req, res)=>{
-    res.send({userName: "kartik", lastName: "Aaryan"});
-})
-
-app.get("/ab+c", (req, res)=>{
-    res.send({userName: "kartik", lastName: "Aaryan"});
-})
-
-app.get("/ab*c", (req, res)=>{
-    res.send({userName: "kartik", lastName: "Aaryan"});
-})
-
-app.get("/a(bc)?d", (req, res)=>{
-    res.send({userName: "kartik", lastName: "Aaryan"});
-})
-
-app.get("/user:userID", (req, res)=>{
-    console.log(req.params);
-    res.send({userName: "kartik", lastName: "Aaryan"});
-})
-
-app.get(/.*fly$/, (req, res)=>{
-    // console.log(req.query);
-    res.send({userName: "kartik", lastName: "Aaryan"});
-})
-
-app.post("/user", (req,res)=>{
-    // logic to change will come here
-    res.send("Data Successfully Created");
-})
-
-app.patch("/user", (req, res)=>{
-    res.send("Data updated successfully");
-})
-
-app.delete("/user", (req,res)=>{
-    res.send("Data deleted successfully");
-})
-
-app.use("/test", (req, res) => {
-  res.send("This is a test route");
+app.get("/users", (req, res, next) => {
+  res.send("This is first response, nameste");
 });
 
+app.get("/user00", (req,res,next)=>{
+    try {
+        throw new Error("error found");
+        res.send("Data sent");
+    } catch (error) {
+        console.log(error);
+        res.send("There is some error")
+    }
+    
+})
 
+// app.get(
+//   "/users/admin",
+//   (req, res, next) => {
+//     console.log("This is first admin check");
+//     // res.send("Response");
+//     next();
+//   },
+//   (req, res, next) => {
+//     console.log("This is second admin check");
+//     next();
+//   },
+//   (req, res) => {
+//     res.send("Final response");
+//   }
+// );
 
 app.listen(3000, () => {
   console.log("Server is running successfully");
