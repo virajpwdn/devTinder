@@ -3,6 +3,7 @@ const app = express();
 const { authenticate } = require("./src/middlewares/auth");
 const { connectDB } = require("./src/config/database");
 const User = require("./src/models/user");
+const user = require("./src/models/user");
 
 // app.use("/admin", authenticate);
 
@@ -23,6 +24,20 @@ app.post("/signup", async (req,res,next)=>{
         console.log(error);
         res.send("Something went wrong ", error);
     }
+})
+
+app.get("/details", async (req,res)=>{
+    // const emailId = ;
+    // console.log(emailId);
+
+    try {
+        const users = await User.find({emailId : req.body.emailId})
+        res.send(users)
+    } catch (error) {
+        res.send("There is some error");
+        console.log(error);
+    }
+
 })
 
 connectDB()
