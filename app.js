@@ -1,40 +1,37 @@
 const express = require("express");
 const app = express();
 const { authenticate } = require("./src/middlewares/auth");
+const { connectDB } = require("./src/config/database");
+const User = require("./src/models/user");
 
-// app.use("/", authenticate);
+// app.use("/admin", authenticate);
 
-app.get("/users", (req, res, next) => {
-  res.send("This is first response, nameste");
+app.use(express.json());
+
+app.get("/admin/login", authenticate, (req, res, next) => {
+  res.send("This are details");
 });
 
-app.get("/user00", (req,res,next)=>{
+app.post("/signup", async (req,res,next)=>{
+    const user = new User(req.body);
+    console.log(user);
+
     try {
-        throw new Error("error found");
-        res.send("Data sent");
+        await user.save();
+        res.send("Data is added to database successufully")
     } catch (error) {
         console.log(error);
-        res.send("There is some error")
+        res.send("Something went wrong ", error);
     }
-    
 })
 
-// app.get(
-//   "/users/admin",
-//   (req, res, next) => {
-//     console.log("This is first admin check");
-//     // res.send("Response");
-//     next();
-//   },
-//   (req, res, next) => {
-//     console.log("This is second admin check");
-//     next();
-//   },
-//   (req, res) => {
-//     res.send("Final response");
-//   }
-// );
-
-app.listen(3000, () => {
-  console.log("Server is running successfully");
-});
+connectDB()
+  .then(() => {
+    console.log("Database connected successfully");
+    app.listen(3000, () => {
+      console.log("Server is running successfully");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
