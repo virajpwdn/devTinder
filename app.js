@@ -3,6 +3,7 @@ const app = express();
 const { authenticate } = require("./src/middlewares/auth");
 const { connectDB } = require("./src/config/database");
 const User = require("./src/models/user");
+const { userDataValidation } = require("./src/utils/validation");
 
 // app.use("/admin", authenticate);
 
@@ -13,10 +14,13 @@ app.get("/admin/login", authenticate, (req, res, next) => {
 });
 
 app.post("/signup", async (req, res, next) => {
-  const user = new User(req.body);
-  console.log(user);
+  // const {firstName, lastName, password, emailId} = req.body;
+  // console.log(user);
 
   try {
+    userDataValidation(req);
+    const user = new User(req.body);
+    console.log(userDataValidation);
     await user.save();
     res.send("Data is added to database successufully");
   } catch (error) {
@@ -83,7 +87,7 @@ app.delete("/delete", async (req, res) => {
 app.patch("/updatedata/:userId", async (req, res) => {
   const userId = req.params?.userId;
   const data = req.body;
-    console.log(userId);
+
   try {
     const ALLOWED_FIELDS = [
       "firstName",
@@ -99,19 +103,21 @@ app.patch("/updatedata/:userId", async (req, res) => {
       return ALLOWED_FIELDS.includes(k);
     });
 
-    console.log(isAllowed);
     if (!isAllowed) {
-      throw new Error("Update not allowed");
+      throw new Error("Changing email is not allowed");
     }
     // console.log(data.skills);
-    if(data?.skills.length > 5){
-        throw new Error("Cannot pass skills more then 5");
+    if (data.skills && data?.skills.length > 5) {
+      throw new Error("Cannot pass skills more then 5");
     }
 
-    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+    const user = await User.findByIdAndUpdate(userId, data, {
       returnDocument: "after",
       runValidators: true,
     });
+    if (!user) {
+      throw new Error("User not found");
+    }
     console.log(user);
     res.send("User data updated");
   } catch (error) {
