@@ -31,13 +31,13 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
-      validate: (value) => {
-        const length = value.toString().length;
-        if (length < 3 || length > 50) {
-          throw new Error("Password length should be in between 3 and 50");
-        }
-        return true;
-      },
+      // validate: (value) => {
+      //   const length = value.toString().length;
+      //   if (length < 3 || length > 50) {
+      //     throw new Error("Password length should be in between 3 and 50");
+      //   }
+      //   return true;
+      // },
     },
     gender: {
       type: String,
