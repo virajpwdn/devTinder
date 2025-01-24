@@ -4,12 +4,15 @@ const { authenticate } = require("./src/middlewares/auth");
 const { connectDB } = require("./src/config/database");
 const User = require("./src/models/user");
 const { userDataValidation } = require("./src/utils/validation");
+
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 
 // app.use("/admin", authenticate);
-
 app.use(express.json());
+app.use(cookieParser())
 
 app.get("/admin/login", authenticate, (req, res, next) => {
   res.send("This are details");
@@ -53,12 +56,26 @@ app.post("/login", async (req, res) => {
     if (!authpassword) {
       throw new Error("Invalid Credentials");
     } 
+    // Create Token
+    const token = jwt.sign({_id:user._id}, "devtinder@123")
 
+    // Add token inside of cookie
+    res.cookie("token", token)
     res.send("Logged In Successfully...");
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
   }
 });
+
+app.get("/profile", (req,res)=>{
+  const cookie = req.cookies;
+  const {token} = cookie;
+  // Verify Token
+  const decodedMsg = jwt.verify(token, "devtinder@123");
+  console.log(decodedMsg);
+  // console.log(token);
+  res.send("Hey")
+})
 
 app.get("/details", async (req, res) => {
   // const emailId = ;
@@ -155,6 +172,13 @@ app.patch("/updatedata/:userId", async (req, res) => {
     res.status(400).send("update failed " + error.message);
   }
 });
+
+
+
+
+
+
+
 
 connectDB()
   .then(() => {
