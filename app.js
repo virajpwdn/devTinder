@@ -9,10 +9,9 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 
-
 // app.use("/admin", authenticate);
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.get("/admin/login", authenticate, (req, res, next) => {
   res.send("This are details");
@@ -43,11 +42,11 @@ app.post("/signup", async (req, res, next) => {
 app.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
-    if(!emailId || !password){
+    if (!emailId || !password) {
       throw new Error("Credentials are necessary");
     }
     const user = await User.findOne({ emailId: emailId });
-   console.log(user);
+    console.log(user);
     if (!user) {
       throw new Error("Invalid Credentials");
     }
@@ -55,27 +54,33 @@ app.post("/login", async (req, res) => {
     const authpassword = await bcrypt.compare(password, user.password);
     if (!authpassword) {
       throw new Error("Invalid Credentials");
-    } 
+    }
     // Create Token
-    const token = jwt.sign({_id:user._id}, "devtinder@123")
+    const token = jwt.sign({ _id: user._id }, "devtinder@123");
 
     // Add token inside of cookie
-    res.cookie("token", token)
+    res.cookie("token", token);
     res.send("Logged In Successfully...");
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
   }
 });
 
-app.get("/profile", (req,res)=>{
-  const cookie = req.cookies;
-  const {token} = cookie;
-  // Verify Token
-  const decodedMsg = jwt.verify(token, "devtinder@123");
-  console.log(decodedMsg);
-  // console.log(token);
-  res.send("Hey")
-})
+app.get("/profile", async (req, res) => {
+  try {
+    const cookie = req.cookies;
+    const { token } = cookie;
+    // Verify Token
+    const decodedMsg = jwt.verify(token, "devtinder@123");
+    console.log(decodedMsg);
+    // console.log(token);
+    const foundUser = await User.findById(decodedMsg);
+    if(!foundUser) throw new Error("user not found");
+    res.send(foundUser);
+  } catch (error) {
+    throw new Error("ERROR " + error.message);
+  }
+});
 
 app.get("/details", async (req, res) => {
   // const emailId = ;
@@ -172,13 +177,6 @@ app.patch("/updatedata/:userId", async (req, res) => {
     res.status(400).send("update failed " + error.message);
   }
 });
-
-
-
-
-
-
-
 
 connectDB()
   .then(() => {
