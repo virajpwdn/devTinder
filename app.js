@@ -46,7 +46,6 @@ app.post("/login", async (req, res) => {
       throw new Error("Credentials are necessary");
     }
     const user = await User.findOne({ emailId: emailId });
-    console.log(user);
     if (!user) {
       throw new Error("Invalid Credentials");
     }
@@ -56,31 +55,29 @@ app.post("/login", async (req, res) => {
       throw new Error("Invalid Credentials");
     }
     // Create Token
-    const token = jwt.sign({ _id: user._id }, "devtinder@123");
+    const token = jwt.sign({ _id: user._id }, "devtinder@123", {expiresIn: '7d'});
 
     // Add token inside of cookie
-    res.cookie("token", token);
+    res.cookie("token", token, {expires: new Date(Date.now() + 12 * 3600000)});
     res.send("Logged In Successfully...");
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", authenticate, async (req, res) => {
   try {
-    const cookie = req.cookies;
-    const { token } = cookie;
-    // Verify Token
-    const decodedMsg = jwt.verify(token, "devtinder@123");
-    console.log(decodedMsg);
-    // console.log(token);
-    const foundUser = await User.findById(decodedMsg);
-    if(!foundUser) throw new Error("user not found");
-    res.send(foundUser);
+    const user = req.user;
+    res.json(user.firstName + " logged in");
   } catch (error) {
     throw new Error("ERROR " + error.message);
   }
 });
+
+app.post("/sendconnectionrequest", authenticate, (req,res)=>{
+  const user = req.user;
+  res.send("connection successful, welcome user " + user.firstName);
+})
 
 app.get("/details", async (req, res) => {
   // const emailId = ;
