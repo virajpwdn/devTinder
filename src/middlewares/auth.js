@@ -1,14 +1,19 @@
-const authenticate = (req, res, next) => {
-    console.log("Auth is checking");
-    const tocken = "abc";
-    const isAuthorized = tocken === "abc";
-    if (isAuthorized) {
-      next();
-    } else {
-      res.status(401).send("You are not authorized");
-    }
-  }
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
-  module.exports = {
-    authenticate,
+const authenticate = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    const decode = await jwt.verify(token, "devtinder@123");
+    console.log(decode);
+    const findUser = await User.findById({ _id: decode });
+    if (!findUser) throw new Error("User not found");
+    res.send(findUser);
+  } catch (error) {
+    res.status(400).json("ERROR: " + error.message);
   }
+};
+
+module.exports = {
+  authenticate,
+};
