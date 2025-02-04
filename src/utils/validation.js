@@ -13,7 +13,7 @@ const userDataValidation = (req) => {
   }
 };
 
-const validateEditProfileData = (req) =>{
+const validateEditProfileData = (req) => {
   const ALLOWEDFIELDS = [
     "firstName",
     "lastName",
@@ -24,12 +24,23 @@ const validateEditProfileData = (req) =>{
     "skills",
   ];
 
+  const { firstName, lastName, gender, bio, age, photo, skills } = req.body;
+
+  if (!firstName.length > 3){
+    throw new Error("First Name Should be greater then 3");
+  }
+  if (!lastName.length > 3)
+    throw new Error("Last Name Should be greater then 3");
+  if (bio.length < 3 || bio.length > 100)
+    throw new Error("bio length should be in between 3 and 100");
+  if (!validator.isURL(photo)) throw new Error("Photo URL is not valid");
+  if (skills.length > 5) throw new Error("skills can be added upto 5");
 
   const isUpdateAllowed = Object.keys(req.body).every((field) => {
     return ALLOWEDFIELDS.includes(field);
   });
   return isUpdateAllowed;
-}
+};
 
 module.exports = {
   userDataValidation,
