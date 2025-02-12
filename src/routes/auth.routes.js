@@ -42,6 +42,7 @@ authRouter.post("/login", async (req, res) => {
   
       
       const isValidate = await user.isValidate(password);
+      if(!isValidate) throw new Error("Invalid Credientials");
       // Create Token
       
       const token = await user.getJWT();
