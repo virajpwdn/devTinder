@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password is required"],
       // validate: (value) => {
       //   const length = value.toString().length;
       //   if (length < 3 || length > 50) {
