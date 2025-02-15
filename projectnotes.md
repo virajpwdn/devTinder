@@ -195,12 +195,130 @@ router.post("/login", login);
 module.exports = router;
 ```
 
-## Conclusion
-This structured backend setup ensures:
-- Modular code organization
-- Secure authentication
-- Proper error handling
-- Scalable API development
+</br>
+</br>
+</br>
+# Node.js Backend Notes
 
-By following these best practices, DevTinder's backend will be efficient, secure, and production-ready! 🚀
+## 1. Enum in Node.js
+
+### What is Enum?
+An **Enum (Enumeration)** is used to restrict user inputs to predefined values. It ensures that the client can only send allowed values and prevents invalid inputs.
+
+### Why Use Enum?
+- Restricts users from entering arbitrary values.
+- Improves data consistency.
+- Returns an error message if the user provides an invalid input.
+
+## 2. Schema Methods and Pre-hooks in Mongoose
+
+### Avoid Arrow Functions in Mongoose Methods
+- When defining schema methods or `pre` hooks in Mongoose models, **do not use arrow functions**.
+- This is because the `this` keyword inside an arrow function does not refer to the schema instance.
+- Always use normal function syntax:
+
+```javascript
+userSchema.pre("save", function () {
+  console.log(this); // 'this' correctly refers to the schema instance
+});
+```
+
+## 3. Pre-hooks in Mongoose
+
+A **pre-hook** is an event handler that runs before certain Mongoose operations.
+
+### Example:
+```javascript
+connectionRequestSchema.pre("save", function () {
+  console.log("Before saving data");
+});
+```
+- The **pre-hook is not limited to saving data**; it can be used for other operations as well.
+
+## 4. Indexing in MongoDB
+
+### Why Use Indexes?
+Indexes improve search speed by storing data in **B-Trees**, reducing time complexity from **O(N) (linear search)** to **O(logN)**.
+
+### How to Create Indexes in Mongoose
+```javascript
+userSchema.index({ firstName: 1 });
+```
+
+### Compound Index
+- Used when searching by **multiple fields** (e.g., `firstName` and `lastName`).
+- The first field acts as a reference for others.
+
+```javascript
+userSchema.index({ firstName: 1, lastName: 1 });
+```
+
+## 5. API Development Best Practices
+
+### Before Creating an API:
+1. **Write down requirements** – Define validation and security checks before implementation.
+2. **Consider corner cases** – Think like an attacker to ensure data security.
+3. **Validate all inputs** – Prevent invalid or malicious data.
+4. **Follow a structured sequence** – Perform all necessary checks before saving data.
+
+### Example: Review API
+```javascript
+1. Validate that 'status' is either "accepted" or "rejected".
+2. Check if 'toUserId' exists in the database.
+3. Ensure that the request status is "Interested" before proceeding.
+4. Save to database only after all validations are passed.
+```
+
+## 6. Secure Data Access in GET APIs
+- Users should only see data they are authorized to access.
+- Never expose sensitive information.
+
+## 7. Database Relations in MongoDB
+
+### Handling Requests
+- The API should only show **pending requests** received by the logged-in user.
+- Requests marked as "ignored" should be **excluded** from the response.
+- If a request is marked as "Interested", it is in a **pending state** and requires user action.
+
+## 8. Reference and Populate in Mongoose
+
+### What is `ref`?
+- `ref` creates a relationship between models.
+- Example:
+
+```javascript
+const userSchema = new mongoose.Schema({
+  fromUserId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+});
+```
+
+### Using `populate`
+- Retrieves related model data.
+- Example:
+
+```javascript
+User.find().populate("fromUserId", "firstName lastName age gender bio profileImg");
+```
+- Without specifying fields, `populate` will fetch **all data** (including sensitive fields like passwords).
+- Specifying fields restricts the data returned.
+
+## 9. Feed API
+
+### Route: `/user/feed` (GET)
+#### Purpose:
+- Displays user feed containing posts, names, connections, and profile images.
+- Requires **authentication**.
+- Shows only **accepted connections**.
+
+## 10. Pagination in MongoDB
+- Use `.skip()` and `.limit()` to handle large datasets efficiently.
+
+```javascript
+User.find().skip(10).limit(5); // Skips first 10 results and fetches 5 records
+```
+
+## Conclusion
+Following these best practices in Node.js and MongoDB ensures **optimized performance, security, and structured API development**. 🚀
+
+
 
