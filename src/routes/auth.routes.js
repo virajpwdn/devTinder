@@ -10,7 +10,7 @@ authRouter.post("/signup", async (req, res, next) => {
 
   try {
     userDataValidation(req);
-    const { firstName, lastName, password, emailId, age, skills, bio, gender } =
+    const { firstName, lastName, password, emailId, age, skills, bio, gender, photo } =
       req.body;
     const hashPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -22,6 +22,7 @@ authRouter.post("/signup", async (req, res, next) => {
       skills,
       bio,
       gender,
+      photo
     });
 
     await user.save();
@@ -53,7 +54,7 @@ authRouter.post("/login", async (req, res) => {
     res.cookie("token", token, {
       expires: new Date(Date.now() + 12 * 3600000),
     });
-    res.send("Logged In Successfully...");
+    res.status(200).json({message: user});
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
   }

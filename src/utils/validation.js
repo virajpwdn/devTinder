@@ -26,20 +26,31 @@ const validateEditProfileData = (req) => {
 
   const { firstName, lastName, gender, bio, age, photo, skills } = req.body;
 
-  if (!firstName.length > 3){
+  if (firstName?.trim()?.length <= 3) {
     throw new Error("First Name Should be greater then 3");
   }
-  if (!lastName.length > 3)
+  if (lastName?.trim()?.length <= 3)
     throw new Error("Last Name Should be greater then 3");
-  if (bio.length < 3 || bio.length > 100)
-    throw new Error("bio length should be in between 3 and 100");
-  if (!validator.isURL(photo)) throw new Error("Photo URL is not valid");
-  if (skills.length > 5) throw new Error("skills can be added upto 5");
+
+  if (bio?.trim()) {
+    const bioLength = bio.trim().length;
+    if (bioLength < 3 || bioLength > 100)
+      throw new Error("bio length should be in between 3 and 100");
+  }
+
+  if (photo?.trim() && !validator.isURL(photo.trim()))
+    throw new Error("Photo URL is not valid");
+  if (Array.isArray(skills) && skills.length > 5)
+    throw new Error("skills can be added upto 5");
 
   const isUpdateAllowed = Object.keys(req.body).every((field) => {
     return ALLOWEDFIELDS.includes(field);
   });
-  return isUpdateAllowed;
+
+  if (!isUpdateAllowed) {
+    throw new Error("Invalid field in edit request");
+  }
+  return true;
 };
 
 module.exports = {

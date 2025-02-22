@@ -6,10 +6,10 @@ const { validateEditProfileData } = require("../utils/validation");
 const bcrypt = require("bcrypt");
 const validator = require('validator');
 
-profileRouter.get("/profile", authenticate, async (req, res) => {
+profileRouter.get("/profile/view", authenticate, async (req, res) => {
   try {
     const user = req.user;
-    res.json(user.firstName + " logged in");
+    res.status(200).json({message : user, status:`${user.firstName}, you are logged in`,});
   } catch (error) {
     throw new Error("ERROR " + error.message);
   }

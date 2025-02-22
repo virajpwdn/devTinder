@@ -4,6 +4,7 @@ const User = require("../models/user");
 const authenticate = async (req, res, next) => {
   try {
     const { token } = req.cookies;
+    if(!token) return res.status(401).send("You are not logged In")
     const decode = jwt.verify(token, "devtinder@123");
     
     const user = await User.findById({ _id: decode._id });
