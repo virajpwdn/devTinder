@@ -106,7 +106,7 @@ userRouter.get("/user/feed", authenticate, async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    res.status(200).json({message: showUser});
+    res.status(200).json(showUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -10,8 +10,17 @@ authRouter.post("/signup", async (req, res, next) => {
 
   try {
     userDataValidation(req);
-    const { firstName, lastName, password, emailId, age, skills, bio, gender, photo } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      password,
+      emailId,
+      age,
+      skills,
+      bio,
+      gender,
+      photo,
+    } = req.body;
     const hashPassword = await bcrypt.hash(password, 10);
     const user = new User({
       firstName,
@@ -22,11 +31,13 @@ authRouter.post("/signup", async (req, res, next) => {
       skills,
       bio,
       gender,
-      photo
+      photo,
     });
 
     await user.save();
-    res.send("Data is added to database successufully");
+    res
+      .status(200)
+      .json({ message: "Data is added to database successufully" });
   } catch (error) {
     // console.log(error);
     res.status(400).send("ERROR : " + error.message);
@@ -54,7 +65,7 @@ authRouter.post("/login", async (req, res) => {
     res.cookie("token", token, {
       expires: new Date(Date.now() + 12 * 3600000),
     });
-    res.status(200).json({message: user});
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
   }
@@ -64,7 +75,7 @@ authRouter.post("/logout", async (req, res) => {
   res.cookie("token", null, {
     expires: new Date(0),
   });
-  res.send("user logout successfully...");
+  res.status(200).json({ message: "user logout successfully..." });
 });
 
 module.exports = authRouter;
