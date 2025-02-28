@@ -34,10 +34,13 @@ authRouter.post("/signup", async (req, res, next) => {
       photo,
     });
 
-    await user.save();
-    res
-      .status(200)
-      .json({ message: "Data is added to database successufully" });
+    const savedUser = await user.save();
+    const token = await savedUser.getJWT();
+    res.cookie("token", token, { expires: new Date(Date.now() + 12 * 3600000) });
+    res.status(200).json({
+      message: "Data is added to database successufully",
+      data: savedUser,
+    });
   } catch (error) {
     // console.log(error);
     res.status(400).send("ERROR : " + error.message);
