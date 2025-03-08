@@ -5,6 +5,8 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { userDataValidation } = require("../utils/validation");
 
+const {run} = require("../utils/sendEmail")
+
 authRouter.post("/signup", async (req, res, next) => {
   // console.log(user);
 
@@ -37,6 +39,11 @@ authRouter.post("/signup", async (req, res, next) => {
     const savedUser = await user.save();
     const token = await savedUser.getJWT();
     res.cookie("token", token, { expires: new Date(Date.now() + 12 * 3600000) });
+
+
+    const sendEmailToUser = await run(firstName, lastName)
+    console.log(sendEmailToUser);
+
     res.status(200).json({
       message: "Data is added to database successufully",
       data: savedUser,
