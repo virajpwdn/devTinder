@@ -3,11 +3,14 @@ const shopRouter = Router();
 const { authenticate } = require("../middlewares/auth");
 const razorpayOrder = require("../utils/razorpay");
 const Payment = require("../models/payment")
+const {membershipAmout} = require("../utils/constants");
 
 shopRouter.post("/payment/create", authenticate, async (req, res) => {
   try {
+    const {membershipType} = req.body
+
     const order = await razorpayOrder.orders.create({
-      amount: 900000,
+      amount: membershipAmout[membershipType] * 100,
       currency: "INR",
       receipt: "receipt#1",
       partial_payment: false,
@@ -15,10 +18,9 @@ shopRouter.post("/payment/create", authenticate, async (req, res) => {
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         email: req.user.emailId,
-        membershipType: "gold"
+        membershipType: membershipType
       },
     });
-    console.log(order);
 
     // saving this order details into DB
     const savedPayment = new Payment({
@@ -39,7 +41,7 @@ shopRouter.post("/payment/create", authenticate, async (req, res) => {
 
     await savedPayment.save();
 
-    res.status(201).json({...savedPayment.toJSON()})
+    res.status(201).json({...savedPayment.toJSON(), key: process.env.RAZOR_PAY_KEY})
   } catch (error) {
     res.status(400).json({message: error.message})
   }
