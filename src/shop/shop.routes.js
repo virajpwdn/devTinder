@@ -9,7 +9,6 @@ const {
 } = require("razorpay/dist/utils/razorpay-utils");
 const User = require("../models/user");
 
-
 shopRouter.post("/payment/create", authenticate, async (req, res) => {
   try {
     const { membershipType } = req.body;
@@ -68,23 +67,36 @@ shopRouter.post("/payment/webhook", async (req, res) => {
     const paymentDetails = req.body.payload.payment.entity;
 
     // update the status into database
-    const updatePaymentDetails = await Payment.findOne({_id: paymentDetails.order_id})
+    const updatePaymentDetails = await Payment.findOne({
+      orderId: paymentDetails.order_id,
+    });
     updatePaymentDetails.status = paymentDetails.status;
     await updatePaymentDetails.save();
 
     // update user details -> update it's memberType, and which membership plan user has bought
-    const user = await User.findOne({_id: updatePaymentDetails.userId})
+    const user = await User.findOne({ _id: updatePaymentDetails.userId });
     user.isPremium = true;
     user.membershipType = updatePaymentDetails.notes.membershipType;
     await user.save();
 
     // return status code (200) -> which will let razor pay know that transication is successfull otherwise it will end up in infinity loop
-    res.status(200).json({message: "webhook is created successfully"})
-
+    res.status(200).json({ message: "webhook is created successfully" });
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: error.message });
   }
 });
+
+shopRouter.get("/permium/verify", async (req,res)=>{
+    try {
+        const user = await User.findOne({_id:req.user._id})
+        if(user.isPremium){
+            return res.status(200).json({isPremium:true})
+        }
+        return res.status(200).json({isPremium:false});
+    } catch (error) {
+        res.status(400).json({message: error.message})
+    }
+})
 
 module.exports = shopRouter;
