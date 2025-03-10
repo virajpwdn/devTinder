@@ -8,10 +8,19 @@ const requestRouter = require("./src/routes/request.routes");
 const userRouter = require("./src/routes/user.routes");
 const cors = require("cors");
 
+
+// CRON JOB
 // require("./src/utils/cronJob");
 
 // Setting up routes for shop page
 const shopRouter = require("./src/shop/shop.routes");
+
+// Socketio configurations
+const http = require("http");
+const initializeSocket = require("./src/utils/socket");
+const server = http.createServer(app)
+initializeSocket(server);
+
 
 
 app.use(
@@ -34,7 +43,7 @@ app.use("/shop", shopRouter);
 connectDB()
   .then(() => {
     console.log("Database connected successfully");
-    app.listen(3000, () => {
+    server.listen(3000, () => {
       console.log("Server is running successfully");
     });
   })
