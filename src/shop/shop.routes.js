@@ -78,6 +78,7 @@ shopRouter.post("/payment/webhook", async (req, res) => {
     user.isPremium = true;
     user.membershipType = updatePaymentDetails.notes.membershipType;
     await user.save();
+    console.log(user);
 
     // return status code (200) -> which will let razor pay know that transication is successfull otherwise it will end up in infinity loop
     res.status(200).json({ message: "webhook is created successfully" });

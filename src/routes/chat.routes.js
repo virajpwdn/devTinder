@@ -22,7 +22,7 @@ chatRouter.get("/getallchat/:targetId", authenticate, async (req, res) => {
     //     _id: chat.messages._id
     // }, {set:{}})
 
-    res.status(200).json({ chat });
+    res.status(200).json({ chat: chat });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
