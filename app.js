@@ -20,6 +20,7 @@ const http = require("http");
 const initializeSocket = require("./src/utils/socket");
 const server = http.createServer(app)
 initializeSocket(server);
+const chatRouter = require("./src/routes/chat.routes");
 
 
 
@@ -39,6 +40,8 @@ app.use("/", userRouter);
 
 // shop routes
 app.use("/shop", shopRouter);
+
+app.use("/chat", chatRouter);
 
 connectDB()
   .then(() => {
