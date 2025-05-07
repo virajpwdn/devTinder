@@ -10,13 +10,13 @@ const createRoomId = ({ targetId, userId }) => {
 };
 
 const allowedOrigins = [
-  "https://devtinder-n4he.onrender.com/",
+  "https://devtinder-n4he.onrender.com",
   "http://localhost:5173",
 ];
 
 const initializeSocket = (server) => {
   const io = socket(server, {
-    cors: { origin: allowedOrigins },
+    cors: { origin: allowedOrigins, credentials: true },
   });
 
   io.on("connection", (socket) => {
