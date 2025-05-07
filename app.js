@@ -10,6 +10,10 @@ const cors = require("cors");
 
 // require("./src/utils/cronJob");
 
+// Setting up routes for shop page
+const shopRouter = require("./src/shop/shop.routes");
+
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -23,6 +27,9 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+
+// shop routes
+app.use("/shop", shopRouter);
 
 connectDB()
   .then(() => {
