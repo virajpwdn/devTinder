@@ -5,7 +5,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { userDataValidation } = require("../utils/validation");
 
-const {run} = require("../utils/sendEmail")
+const { run } = require("../utils/sendEmail");
 
 authRouter.post("/signup", async (req, res, next) => {
   // console.log(user);
@@ -38,10 +38,14 @@ authRouter.post("/signup", async (req, res, next) => {
 
     const savedUser = await user.save();
     const token = await savedUser.getJWT();
-    res.cookie("token", token, { expires: new Date(Date.now() + 12 * 3600000) });
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 12 * 3600000),
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
 
-
-    const sendEmailToUser = await run(firstName, lastName)
+    const sendEmailToUser = await run(firstName, lastName);
     console.log(sendEmailToUser);
 
     res.status(200).json({
@@ -74,6 +78,9 @@ authRouter.post("/login", async (req, res) => {
     // Add token inside of cookie
     res.cookie("token", token, {
       expires: new Date(Date.now() + 12 * 3600000),
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
     });
     res.status(200).json(user);
   } catch (error) {

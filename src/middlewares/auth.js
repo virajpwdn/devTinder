@@ -5,7 +5,7 @@ const authenticate = async (req, res, next) => {
   try {
     const { token } = req.cookies;
     if(!token) return res.status(401).send("You are not logged In")
-    const decode = jwt.verify(token, "devtinder@123");
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
     
     const user = await User.findById({ _id: decode._id });
     if (!user) throw new Error("User not found");
