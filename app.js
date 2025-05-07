@@ -8,7 +8,6 @@ const requestRouter = require("./src/routes/request.routes");
 const userRouter = require("./src/routes/user.routes");
 const cors = require("cors");
 
-
 // CRON JOB
 // require("./src/utils/cronJob");
 
@@ -18,11 +17,14 @@ const shopRouter = require("./src/shop/shop.routes");
 // Socketio configurations
 const http = require("http");
 const initializeSocket = require("./src/utils/socket");
-const server = http.createServer(app)
+const server = http.createServer(app);
 initializeSocket(server);
 const chatRouter = require("./src/routes/chat.routes");
 
-const allowedOrigins = ["http://localhost:5173", "https://devtinder-n4he.onrender.com"];
+const allowedOrigins = [
+  "https://devtinder-n4he.onrender.com",
+  "http://localhost:5173",
+];
 
 app.use(
   cors({
