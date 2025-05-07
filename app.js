@@ -22,11 +22,11 @@ const server = http.createServer(app)
 initializeSocket(server);
 const chatRouter = require("./src/routes/chat.routes");
 
-
+const allowedOrigins = ["http://localhost:5173", "https://devtinder-n4he.onrender.com/"];
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   })
 );

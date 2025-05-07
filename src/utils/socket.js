@@ -9,9 +9,14 @@ const createRoomId = ({ targetId, userId }) => {
     .digest("hex");
 };
 
+const allowedOrigins = [
+  "https://devtinder-n4he.onrender.com/",
+  "http://localhost:5173",
+];
+
 const initializeSocket = (server) => {
   const io = socket(server, {
-    cors: { origin: "http://localhost:5173" },
+    cors: { origin: allowedOrigins },
   });
 
   io.on("connection", (socket) => {
