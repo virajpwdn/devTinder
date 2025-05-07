@@ -10,7 +10,7 @@ const createRoomId = ({ targetId, userId }) => {
 };
 
 const allowedOrigins = [
-  "https://devtinder-n4he.onrender.com",
+  "https://devtinder-frontend-kas3.onrender.com",
   "http://localhost:5173",
 ];
 

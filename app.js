@@ -22,7 +22,7 @@ initializeSocket(server);
 const chatRouter = require("./src/routes/chat.routes");
 
 const allowedOrigins = [
-  "https://devtinder-n4he.onrender.com",
+  "https://devtinder-frontend-kas3.onrender.com",
   "http://localhost:5173",
 ];
 
