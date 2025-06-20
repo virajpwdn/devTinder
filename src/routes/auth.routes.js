@@ -45,8 +45,8 @@ authRouter.post("/signup", async (req, res, next) => {
       sameSite: "None",
     });
 
-    const sendEmailToUser = await run(firstName, lastName);
-    console.log(sendEmailToUser);
+    // const sendEmailToUser = await run(firstName, lastName);
+    // console.log(sendEmailToUser);
 
     res.status(200).json({
       message: "Data is added to database successufully",

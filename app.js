@@ -9,11 +9,16 @@ const requestRouter = require("./src/routes/request.routes");
 const userRouter = require("./src/routes/user.routes");
 const cors = require("cors");
 
+
+
 // CRON JOB
 // require("./src/utils/cronJob");
 
 // Setting up routes for shop page
 const shopRouter = require("./src/shop/shop.routes");
+
+// Twilio import
+const messageRouter = require("./src/routes/twilio.routes");
 
 // Socketio configurations
 const http = require("http");
@@ -45,6 +50,8 @@ app.use("/", userRouter);
 app.use("/shop", shopRouter);
 
 app.use("/chat", chatRouter);
+
+app.use("/message", messageRouter);
 
 connectDB()
   .then(() => {
