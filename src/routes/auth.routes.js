@@ -4,6 +4,7 @@ const authRouter = Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { userDataValidation } = require("../utils/validation");
+const logger = require("../utils/observability/logger")
 
 const { run } = require("../utils/sendEmail");
 
@@ -82,8 +83,11 @@ authRouter.post("/login", async (req, res) => {
       secure: true,
       sameSite: "None",
     });
+
+    logger.info(`${user.firstName} is loggedIn`)
     res.status(200).json(user);
   } catch (error) {
+    logger.error("ERROR" + error.message)
     res.status(400).send("ERROR : " + error.message);
   }
 });
