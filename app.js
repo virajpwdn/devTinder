@@ -25,7 +25,12 @@ const chatRouter = require("./src/routes/chat.routes");
 const allowedOrigins = [
   "https://devtinder-frontend-qu2k.onrender.com",
   "http://localhost:5173",
+  "http://localhost:80",
+  "http://localhost",
+  "localhost",
+  "https://devtinder.virajpatwardhan.in"
 ];
+
 
 app.use(
   cors({

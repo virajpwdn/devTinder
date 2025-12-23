@@ -12,6 +12,7 @@ const createRoomId = ({ targetId, userId }) => {
 const allowedOrigins = [
   "https://devtinder-frontend-qu2k.onrender.com",
   "http://localhost:5173",
+  "https://devtinder.virajpatwardhan.in"
 ];
 
 const initializeSocket = (server) => {
