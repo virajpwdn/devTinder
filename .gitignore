@@ -2,3 +2,5 @@ node_modules
 notes.md
 .env
 otherapi.js
+secret.yml
+secrect.yml
