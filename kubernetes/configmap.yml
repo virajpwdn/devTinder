@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-devtinder
+  namespace: devtinder
+data:
+  NODE_ENV: "production"
+  LOKI_HOST: "http://loki:3100"
+  PROMETHEUS_HOST: "http://prometheus:3000"
+  PORT: "3000"
