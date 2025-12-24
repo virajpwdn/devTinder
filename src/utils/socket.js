@@ -8,11 +8,19 @@ const createRoomId = ({ targetId, userId }) => {
     .update([targetId, userId].sort().join("_"))
     .digest("hex");
 };
-
+ 
 const allowedOrigins = [
   "https://devtinder-frontend-qu2k.onrender.com",
   "http://localhost:5173",
-  "https://devtinder.virajpatwardhan.in"
+  "https://devtinder.virajpatwardhan.in",
+  "http://backend:3000",
+  "http://backend",
+  "http://localhost",
+  "http://localhost:80",
+  "http://backend:80",
+  "http://127.0.0.1",
+  "http://127.0.0.1:3000",
+  "http://0.0.0.0:3000"
 ];
 
 const initializeSocket = (server) => {
