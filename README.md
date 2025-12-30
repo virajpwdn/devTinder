@@ -170,7 +170,7 @@ docker run -p 3000:3000 devtinder-backend
 * Environment variables managed via ConfigMaps & Secrets
 
 ```bash
-kubectl apply -f k8s/
+kubectl apply -f kubernetes/
 ```
 
 ---
