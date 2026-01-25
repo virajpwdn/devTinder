@@ -1,11 +1,5 @@
 # DevTinder Backend 🚀
-
-> **A production‑grade, scalable backend powering a real‑time developer matchmaking platform.**
-> Built with modern backend engineering, cloud‑native deployment, and full observability in mind.
-
----
-
-## 🧠 Overview
+https://portfolio.virajpatwardhan.in/projects/stackwave
 
 **DevTinder Backend** is the core engine behind the DevTinder platform — handling authentication, matchmaking logic, real‑time chat, payments, notifications, and system observability.
 
