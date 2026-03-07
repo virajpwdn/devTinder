@@ -2,6 +2,7 @@ const { run } = require("../utils/sendEmail");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { userDataValidation } = require("../utils/validation");
+const client = require("../utils/imageKit");
 const logger = require("../utils/observability/logger");
 
 module.exports.signUpController = async (req, res, next) => {
@@ -91,4 +92,20 @@ module.exports.logoutController = async (req, res) => {
     expires: new Date(0),
   });
   res.status(200).json({ message: "user logout successfully..." });
+};
+
+module.exports.imageKitController = async (req, res) => {
+  try {
+    const { token, expire, signature } =
+      client.helper.getAuthenticationParameters();
+    res.send({
+      token,
+      expire,
+      signature,
+      publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    });
+  } catch (error) {
+    logger.error("ERROR" + error.message);
+    res.status(400).send("ERROR : " + error.message);
+  }
 };
