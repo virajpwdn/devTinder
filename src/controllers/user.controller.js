@@ -1,5 +1,8 @@
 const connectionRequest = require("../models/connectionRequestion");
 const user = require("../models/user");
+const client = require("../utils/imageKit");
+const Avatar = require("../models/avatar");
+const logger = require("../utils/observability/logger");
 
 const USER_SAFE_DATA = "firstName lastName gender bio age photo skills";
 
@@ -104,5 +107,45 @@ module.exports.feedController = async (req, res) => {
     res.status(200).json(showUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports.imgUploadController = async (req, res) => {
+  try {
+    const { photos } = req.body;
+    if (!photos) {
+      return res.status(400).json({ message: "photos payload is missing" });
+    }
+    if (!Array.isArray(photos)) {
+      return res
+        .status(400)
+        .json({ message: "photos payload should be an array" });
+    }
+
+    const userId = req.user._id;
+    const existing = await Avatar.findOne({ authorId: userId });
+    const existingCount = existing?.photos?.length || 0;
+
+    if (existingCount + photos.length > 6) {
+      return res.status(400).json({ message: "Maximum 6 photos are allowed" });
+    }
+
+    // const response = await Avatar.findOneAndUpdate(
+    //   { authorId: userId },
+    //   { $push: { photos: { $each: photos } } },
+    //   { new: true, runValidators: true, upsert: true },
+    // );
+
+    if (existing) {
+      existing.photos.push(...photos);
+      await existing.save();
+    } else {
+      await Avatar.create({ authorId: userId, photos });
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    logger.error(`error: updating photos url in db ${error}`);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

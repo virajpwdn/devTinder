@@ -17,4 +17,6 @@ userRouter.get(
 
 userRouter.get("/user/feed", authenticate, userController.feedController);
 
+userRouter.post("/user/img/upload", authenticate, userController.imgUploadController);
+
 module.exports = userRouter;
