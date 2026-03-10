@@ -113,7 +113,7 @@ module.exports.feedController = async (req, res) => {
 module.exports.imgUploadController = async (req, res) => {
   try {
     const { photos } = req.body;
-    if (!photos) {
+    if (!photos || photos.length === 0) {
       return res.status(400).json({ message: "photos payload is missing" });
     }
     if (!Array.isArray(photos)) {
@@ -149,3 +149,21 @@ module.exports.imgUploadController = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+module.exports.getImgController = async (req, res) => {
+  try {
+    const userPhotos = await Avatar.findOne({ authorId: req.user._id });
+
+    if (!userPhotos) {
+      return res
+        .status(404)
+        .json({ message: "Photos not found, upload photos from edit page" });
+    }
+
+    res.status(200).json({ data: userPhotos });
+  } catch (error) {
+    logger.error(`error: Internal server error`);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+

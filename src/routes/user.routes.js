@@ -17,6 +17,14 @@ userRouter.get(
 
 userRouter.get("/user/feed", authenticate, userController.feedController);
 
-userRouter.post("/user/img/upload", authenticate, userController.imgUploadController);
+userRouter.post(
+  "/user/img/upload",
+  authenticate,
+  userController.imgUploadController,
+);
+
+userRouter.get("/user/get/img", authenticate, userController.getImgController);
+
+userRouter.delete("/user/delete/:fileId", authenticate, userController.deleteImgController)
 
 module.exports = userRouter;
