@@ -167,3 +167,26 @@ module.exports.getImgController = async (req, res) => {
   }
 };
 
+module.exports.deleteImgController = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const userId = req.user._id;
+
+    await client.files.delete(fileId);
+
+    const photosDelete = await Avatar.findOneAndUpdate(
+      { authorId: userId },
+      { $pull: { photos: { fileId } } },
+      { new: true },
+    );
+
+    if (!photosDelete) {
+      return res.status(404).json({ message: "No photos found for this user" });
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    logger.error(`error deleting photo: ${error}`);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
