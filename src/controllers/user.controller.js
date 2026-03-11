@@ -184,7 +184,7 @@ module.exports.deleteImgController = async (req, res) => {
       return res.status(404).json({ message: "No photos found for this user" });
     }
 
-    res.status(200).json({ success: true });
+    res.status(200).json({ success: true, photos: photosDelete.photos });
   } catch (error) {
     logger.error(`error deleting photo: ${error}`);
     res.status(500).json({ message: "Internal server error" });
