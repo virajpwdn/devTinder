@@ -25,6 +25,6 @@ userRouter.post(
 
 userRouter.get("/user/get/img", authenticate, userController.getImgController);
 
-userRouter.delete("/user/delete/:fileId", authenticate, userController.deleteImgController)
+userRouter.delete("/user/img/delete/:fileId", authenticate, userController.deleteImgController)
 
 module.exports = userRouter;
