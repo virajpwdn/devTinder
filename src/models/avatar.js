@@ -25,6 +25,10 @@ const photoSchema = new mongoose.Schema({
   size: {
     type: String,
   },
+  clientRefId: {
+    type: String,
+    required: true,
+  },
 });
 
 const AvatarSchema = new mongoose.Schema(
