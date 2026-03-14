@@ -116,6 +116,11 @@ module.exports.imgUploadController = async (req, res) => {
     if (!photos || photos.length === 0) {
       return res.status(400).json({ message: "photos payload is missing" });
     }
+    // if (!photos.clientRefId) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "client reference id is missing" });
+    // }
     if (!Array.isArray(photos)) {
       return res
         .status(400)
@@ -129,12 +134,6 @@ module.exports.imgUploadController = async (req, res) => {
     if (existingCount + photos.length > 6) {
       return res.status(400).json({ message: "Maximum 6 photos are allowed" });
     }
-
-    // const response = await Avatar.findOneAndUpdate(
-    //   { authorId: userId },
-    //   { $push: { photos: { $each: photos } } },
-    //   { new: true, runValidators: true, upsert: true },
-    // );
 
     if (existing) {
       existing.photos.push(...photos);
