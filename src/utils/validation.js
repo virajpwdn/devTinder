@@ -22,26 +22,19 @@ const validateEditProfileData = (req) => {
     "age",
     "photo",
     "skills",
+    "socialLinks",
   ];
 
-  const { firstName, lastName, gender, bio, age, photo, skills } = req.body;
+  const ALLOWED_SOCIAL_KEYS = [
+    "linkedIn",
+    "gitHub",
+    "twitter",
+    "instagram",
+    "website",
+  ];
 
-  if (firstName?.trim()?.length <= 3) {
-    throw new Error("First Name Should be greater then 3");
-  }
-  if (lastName?.trim()?.length <= 3)
-    throw new Error("Last Name Should be greater then 3");
-
-  if (bio?.trim()) {
-    const bioLength = bio.trim().length;
-    if (bioLength < 3 || bioLength > 100)
-      throw new Error("bio length should be in between 3 and 100");
-  }
-
-  if (photo?.trim() && !validator.isURL(photo.trim()))
-    throw new Error("Photo URL is not valid");
-  if (Array.isArray(skills) && skills.length > 5)
-    throw new Error("skills can be added upto 5");
+  const { firstName, lastName, gender, bio, age, photo, skills, socialLinks } =
+    req.body;
 
   const isUpdateAllowed = Object.keys(req.body).every((field) => {
     return ALLOWEDFIELDS.includes(field);
@@ -50,6 +43,40 @@ const validateEditProfileData = (req) => {
   if (!isUpdateAllowed) {
     throw new Error("Invalid field in edit request");
   }
+
+  if (firstName.trim().length < 3) {
+    throw new Error("First Name Should be greater then 3");
+  }
+  if (lastName.trim().length < 3)
+    throw new Error("Last Name Should be greater then 3");
+
+  if (bio?.trim()) {
+    const bioLength = bio.trim().length;
+    if (bioLength < 3 || bioLength > 100)
+      throw new Error("bio length should be in between 3 and 100");
+  }
+
+  if (socialLinks !== undefined) {
+    const hasInvalidKey = Object.keys(socialLinks).some(
+      (key) => !ALLOWED_SOCIAL_KEYS.includes(key),
+    );
+
+    if (hasInvalidKey) {
+      throw new Error("Invalid Social Links Field");
+    }
+
+    Object.keys(ALLOWED_SOCIAL_KEYS).forEach(([platform, url]) => {
+      if (url && !validator.isURL(url)) {
+        throw new Error(`${platform} url is not valid`);
+      }
+    });
+  }
+
+  if (photo?.trim() && !validator.isURL(photo.trim()))
+    throw new Error("Photo URL is not valid");
+  if (Array.isArray(skills) && skills.length > 5)
+    throw new Error("skills can be added upto 5");
+
   return true;
 };
 

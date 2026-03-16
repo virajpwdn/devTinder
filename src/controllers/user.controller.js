@@ -151,6 +151,19 @@ module.exports.imgUploadController = async (req, res) => {
 
 module.exports.getImgController = async (req, res) => {
   try {
+    const { userId } = req.query;
+
+    if (userId) {
+      const otherUserPhotos = await Avatar.findOne({ authorId: userId });
+
+      if (!otherUserPhotos) {
+        return res
+          .status(404)
+          .json({ message: "Photos not found, upload photos from edit page" });
+      }
+
+      res.status(200).json({ data: otherUserPhotos });
+    }
     const userPhotos = await Avatar.findOne({ authorId: req.user._id });
 
     if (!userPhotos) {

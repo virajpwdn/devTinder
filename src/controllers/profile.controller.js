@@ -1,4 +1,3 @@
-const User = require("../models/user");
 const { validateEditProfileData } = require("../utils/validation");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
@@ -15,19 +14,31 @@ module.exports.profileViewController = async (req, res) => {
 module.exports.profileEditController = async (req, res) => {
   try {
     if (!validateEditProfileData(req)) throw new Error("Invalid Edit Request");
+    const ALLOWED_FIELDS = [
+      "firstName",
+      "lastName",
+      "gender",
+      "age",
+      "bio",
+      "photo",
+      "skills",
+      "socialLinks",
+    ];
 
     const oldData = req.user;
     const newData = req.body;
-
-    Object.keys(newData).forEach((key) => (oldData[key] = newData[key]));
+    ALLOWED_FIELDS.forEach((key) => {
+      if (newData[key] !== undefined) {
+        oldData[key] = newData[key];
+      }
+    });
 
     await oldData.save();
 
-    res.json({
+    res.status(200).json({
       message: `${oldData.firstName}, your profile is updated successfully`,
       data: oldData,
     });
-    // res.send(`${oldData.firstName}, your profile is updated successfully`);
   } catch (error) {
     res.status(400).json("ERROR: " + error.message);
   }
