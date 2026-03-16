@@ -82,8 +82,31 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: false,
     },
+    socialLinks: {
+      linkedIn: {
+        type: String,
+        default: "",
+      },
+      twitter: {
+        type: String,
+        default: "",
+      },
+      instagram: {
+        type: String,
+        default: "",
+      },
+      gitHub: {
+        type: String,
+        default: "",
+      },
+      website: {
+        type: String,
+        default: "",
+      },
+    },
   },
-  { timestamps: true }
+
+  { timestamps: true },
 );
 
 userSchema.methods.getJWT = async function () {

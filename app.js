@@ -9,7 +9,8 @@ const requestRouter = require("./src/routes/request.routes");
 const userRouter = require("./src/routes/user.routes");
 const cors = require("cors");
 const { register, client } = require("./src/utils/observability/prometheus");
-const logger = require("./src/utils/observability/logger")
+const logger = require("./src/utils/observability/logger");
+const morgan = require("morgan");
 
 // CRON JOB
 // require("./src/utils/cronJob");
@@ -39,16 +40,15 @@ const allowedOrigins = [
   "http://0.0.0.0:3000",
 ];
 
-
 logger.info("Application started");
-
 
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
-  })
+  }),
 );
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -58,9 +58,9 @@ app.get("/metrics", async (req, res) => {
   res.send(metrics);
 });
 
-app.get("/health", (req,res) => {
-  res.status(200).json({status: "Server is up and running!"})
-})
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "Server is up and running!" });
+});
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
@@ -75,10 +75,10 @@ app.use("/chat", chatRouter);
 connectDB()
   .then(() => {
     // console.log("Database connected successfully");
-    logger.info("Database is connected")
+    logger.info("Database is connected");
     server.listen(process.env.PORT, () => {
       // console.log("Server is running successfully");
-      logger.info("Server is running successfully`")
+      logger.info("Server is running successfully`");
     });
   })
   .catch((err) => {
