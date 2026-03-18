@@ -23,10 +23,11 @@ module.exports.profileEditController = async (req, res) => {
       "photo",
       "skills",
       "socialLinks",
+      "coverPhoto"
     ];
 
     const oldData = req.user;
-    const newData = req.body;
+    const newData = req.body.formData;
     ALLOWED_FIELDS.forEach((key) => {
       if (newData[key] !== undefined) {
         oldData[key] = newData[key];
