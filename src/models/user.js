@@ -65,6 +65,17 @@ const userSchema = new mongoose.Schema(
       },
     },
 
+    coverPhoto: {
+      type: String,
+      default:
+        "https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=3264&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      // validate: (value) => {
+      //   if (!validator.isURL(value)) {
+      //     throw new Error("Enter correct cover photo url");
+      //   }
+      // },
+    },
+
     bio: {
       type: String,
       default: "Write your bio to find people",

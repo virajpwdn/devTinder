@@ -4,7 +4,7 @@ const client = require("../utils/imageKit");
 const Avatar = require("../models/avatar");
 const logger = require("../utils/observability/logger");
 
-const USER_SAFE_DATA = "firstName lastName gender bio age photo skills";
+const USER_SAFE_DATA = "firstName lastName gender bio age photo skills coverPhoto socialLinks";
 
 module.exports.userRequestReceivedController = async (req, res) => {
   try {
@@ -162,7 +162,7 @@ module.exports.getImgController = async (req, res) => {
           .json({ message: "Photos not found, upload photos from edit page" });
       }
 
-      res.status(200).json({ data: otherUserPhotos });
+      return res.status(200).json({ data: otherUserPhotos });
     }
     const userPhotos = await Avatar.findOne({ authorId: req.user._id });
 

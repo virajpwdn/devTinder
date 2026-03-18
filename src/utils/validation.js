@@ -23,6 +23,7 @@ const validateEditProfileData = (req) => {
     "photo",
     "skills",
     "socialLinks",
+    "coverPhoto",
   ];
 
   const ALLOWED_SOCIAL_KEYS = [
@@ -34,14 +35,15 @@ const validateEditProfileData = (req) => {
   ];
 
   const { firstName, lastName, gender, bio, age, photo, skills, socialLinks } =
-    req.body;
+    req.body.formData;
 
-  const isUpdateAllowed = Object.keys(req.body).every((field) => {
+  const isUpdateAllowed = Object.keys(req.body.formData).every((field) => {
+    console.log("field - ", field);
     return ALLOWEDFIELDS.includes(field);
   });
 
   if (!isUpdateAllowed) {
-    throw new Error("Invalid field in edit request");
+    throw new Error("Invalid field in edit request", isUpdateAllowed);
   }
 
   if (firstName.trim().length < 3) {
